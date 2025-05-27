@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCTV Log</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        @media (max-width: 600px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            th {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 50%;
+                padding-left: 10px;
+                text-align: left;
+                font-weight: bold;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body>
+    <div>
+        <h1>CCTV Log</h1>
+        <p>Welcome to the CCTV log page. Here you can view the logs of all CCTV cameras.</p>
+        <div class="table-responsive">
+            <table border="1">
+                <thead>
+                    <tr>
+                       
+                        <th>Date</th>
+                        <th>CCTV 3</th>
+                        <th>CCTV 4</th>
+                        <th>CCTV 6</th>
+                        <th>CCTV 7</th>
+                        <th>Time</th>
+                        <th>Created By</th>
+                        <th>Remark</th>
+                    
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be dynamically inserted here -->
+                </tbody>
+            </table>
+            <!-- uniqueid,date,cctv3,cctv4,cctv6,cctv7,time,createby,remark,updatedate,updateby
+            20250505,2025-05-05,1,1,1,0,9:00:00,ben,fdfdghfhgrgwfffaggdsgs,2025-05-06 8:31,ben -->
+        </div>
+    </div>
+<script>
+
+    fetch('cctvlog.csv')
+        .then(response => response.text())
+        .then(data => {
+            const rows = data.split('\n').slice(1); // Skip header row
+            const tableBody = document.querySelector('tbody');
+            rows.forEach(row => {
+                const columns = row.split(',');
+                if (columns.length === 11) { // Ensure correct number of columns
+                    const cctv3Icon = columns[2] === "1"
+                        ? '<i class="fas fa-check" style="color:green"></i>'
+                        : '<i class="fas fa-times" style="color:red"></i>';
+                    const cctv4Icon = columns[3] === "1"
+                        ? '<i class="fas fa-check" style="color:green"></i>'
+                        : '<i class="fas fa-times" style="color:red"></i>';
+                    const cctv6Icon = columns[4] === "1"
+                        ? '<i class="fas fa-check" style="color:green"></i>'
+                        : '<i class="fas fa-times" style="color:red"></i>';
+                    const cctv7Icon = columns[5] === "1"
+                        ? '<i class="fas fa-check" style="color:green"></i>'
+                        : '<i class="fas fa-times" style="color:red"></i>';
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td>${columns[1]}</td>
+                        <td>${cctv3Icon}</td>
+                        <td>${cctv4Icon}</td>
+                        <td>${cctv6Icon}</td>
+                        <td>${cctv7Icon}</td>
+                        <td>${columns[6]}</td>
+                        <td>${columns[7]}</td>
+                        <td>${columns[8]}</td>                      
+                    `;
+                    tableBody.appendChild(newRow);
+                }
+            });
+        })
+        .catch(error => console.error('Error loading CSV:', error));
+
+    // Example JavaScript to handle dynamic data loading or other functionalities
+    document.addEventListener('DOMContentLoaded', function () {
+        // This is where you can add functionality to fetch and display CCTV logs dynamically
+        console.log("CCTV Log page loaded.");
+    });
+
+    function addLog(uniqueId, date, cctv3, cctv4, cctv6, cctv7, time, createdBy, remark, updateDate, updatedBy) {
+        const tableBody = document.querySelector('tbody');
+        const cctv3Icon = cctv3 === "1"
+            ? '<i class="fas fa-check" style="color:green"></i>'
+            : '<i class="fas fa-times" style="color:red"></i>';
+        const cctv4Icon = cctv4 === "1"
+            ? '<i class="fas fa-check" style="color:green"></i>'
+            : '<i class="fas fa-times" style="color:red"></i>';
+        const cctv6Icon = cctv6 === "1"
+            ? '<i class="fas fa-check" style="color:green"></i>'
+            : '<i class="fas fa-times" style="color:red"></i>';
+        const cctv7Icon = cctv7 === "1"
+            ? '<i class="fas fa-check" style="color:green"></i>'
+            : '<i class="fas fa-times" style="color:red"></i>';
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${date}</td>
+            <td>${cctv3Icon}</td>
+            <td>${cctv4Icon}</td>
+            <td>${cctv6Icon}</td>
+            <td>${cctv7Icon}</td>
+            <td>${time}</td>
+            <td>${createdBy}</td>
+            <td>${remark}</td>
+        `;
+        tableBody.appendChild(newRow);
+    }
+
+</script>
+
+</body>
+</html>
