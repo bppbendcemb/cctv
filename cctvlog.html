@@ -8,35 +8,181 @@
 
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background: #f4f7fb;
+            color: #222;
+            padding: 20px;
         }
+
         h1 {
-            color: #333;
+            color: #2a4d8f;
+            margin-top: 32px;
+            margin-bottom: 8px;
+            font-size: 2em;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 8px #e3e8f0;
         }
+
+        p {
+            color: #4a5a6a;
+            margin-bottom: 18px;
+        }
+
+        label {
+            font-weight: 500;
+            margin-right: 6px;
+            color: #2a4d8f;
+        }
+
+        select {
+            padding: 4px 8px;
+            border-radius: 5px;
+            border: 1px solid #b5c7e3;
+            background: #fff;
+            margin-right: 10px;
+            font-size: 0.95em;
+            transition: border 0.2s;
+        }
+        select:focus {
+            border-color: #4682eb;
+            outline: none;
+        }
+
         .table-responsive {
             overflow-x: auto;
+            margin-top: 18px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(70,130,235,0.07);
+            background: #fff;
+            padding: 8px 0;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 500px;
+            font-size: 0.85em;
+            table-layout: fixed;
         }
-        th, td {
-            padding: 8px 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+
+        th,
+        td {
+            padding: 6px 8px;
+            text-align: center;
+            border-bottom: 1px solid #e3e8f0;
+            background-color: #fff;
+            color: #333;
+            transition: background 0.2s;
+            vertical-align: middle;
+            word-break: break-word;
         }
+
         th {
-            background-color: #f2f2f2;
+            background: #4682eb;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 0.95em;
+            color: #fff;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #4682eb;
+            box-shadow: 0 2px 4px rgba(70,130,235,0.07);
         }
+
         tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: #f6f8fc;
         }
+
         tr:hover {
-            background-color: #f1f1f1;
+            background-color: #eaf1fb;
         }
+
+        i.fas.fa-check {
+            color: #2ecc40;
+            font-size: 1em;
+        }
+        i.fas.fa-times {
+            color: #e74c3c;
+            font-size: 1em;
+        }
+
+        /* Set fixed row height for 31 rows to fit A4 */
+        tbody tr {
+            height: 22px;
+        }
+
+        /* Print styles for A4 - print only table */
+        @media print {
+            body * {
+                visibility: hidden !important;
+            }
+            .table-responsive, .table-responsive * {
+                visibility: visible !important;
+            }
+            .table-responsive {
+                position: absolute !important;
+                left: 0;
+                top: 0;
+                width: 100vw !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                background: #fff !important;
+            }
+            table {
+                min-width: 0;
+                width: 100%;
+                font-size: 0.8em;
+            }
+            th, td {
+                padding: 4px 6px;
+                color: #000 !important;
+                background: #fff !important;
+                border: 1px solid #888 !important;
+            }
+            th {
+                background: #e3e8f0 !important;
+                color: #222 !important;
+                box-shadow: none;
+            }
+            tr, td, th {
+                page-break-inside: avoid !important;
+            }
+            html, body {
+                height: 297mm;
+                width: 210mm;
+                margin: 0;
+                padding: 0;
+            }
+            @page {
+                size: A4 portrait;
+                margin: 10mm 10mm 10mm 10mm;
+            }
+        }
+
+        @media (max-width: 900px) {
+            table {
+                min-width: 400px;
+            }
+            th, td {
+                padding: 6px 4px;
+            }
+        }
+
         @media (max-width: 600px) {
-            table, thead, tbody, th, td, tr {
+            .table-responsive {
+                padding: 0;
+                box-shadow: none;
+                border-radius: 0;
+            }
+            table,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
                 display: block;
             }
             th {
@@ -48,6 +194,8 @@
                 text-align: right;
                 padding-left: 50%;
                 position: relative;
+                border: none;
+                border-bottom: 1px solid #e3e8f0;
             }
             td::before {
                 content: attr(data-label);
@@ -57,9 +205,12 @@
                 padding-left: 10px;
                 text-align: left;
                 font-weight: bold;
+                color: #4682eb;
             }
         }
     </style>
+
+     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 
@@ -67,11 +218,32 @@
     <div>
         <h1>CCTV Log</h1>
         <p>Welcome to the CCTV log page. Here you can view the logs of all CCTV cameras.</p>
+        <div>
+            <label for="monthSelect">Month:</label>
+            <select id="monthSelect" name="monthSelect" title="Select month">
+                <option value="" disabled>Select month</option>
+                <option value="01">January</option>
+                <option value="02">February</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+            <label for="yearSelect">Year:</label>
+            <select id="yearSelect" name="yearSelect" title="Select year"></select>
+        </div>
+
         <div class="table-responsive">
             <table border="1">
                 <thead>
                     <tr>
-                       
+
                         <th>Date</th>
                         <th>CCTV 3</th>
                         <th>CCTV 4</th>
@@ -80,27 +252,30 @@
                         <th>Time</th>
                         <th>Created By</th>
                         <th>Remark</th>
-                    
+
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Data will be dynamically inserted here -->
                 </tbody>
             </table>
-            <!-- uniqueid,date,cctv3,cctv4,cctv6,cctv7,time,createby,remark,updatedate,updateby
-            20250505,2025-05-05,1,1,1,0,9:00:00,ben,fdfdghfhgrgwfffaggdsgs,2025-05-06 8:31,ben -->
+          
         </div>
     </div>
-<script>
+    <script>
+        let allRows = [];
 
-    fetch('cctvlog.csv')
-        .then(response => response.text())
-        .then(data => {
-            const rows = data.split('\n').slice(1); // Skip header row
+        function renderTable(filteredRows) {
             const tableBody = document.querySelector('tbody');
-            rows.forEach(row => {
-                const columns = row.split(',');
-                if (columns.length === 11) { // Ensure correct number of columns
+            tableBody.innerHTML = '';
+            // Sort by date ascending (columns[1] = YYYY-MM-DD)
+            filteredRows.sort((a, b) => {
+                if (a[1] < b[1]) return -1;
+                if (a[1] > b[1]) return 1;
+                return 0;
+            });
+            filteredRows.forEach(columns => {
+                if (columns.length === 11) {
                     const cctv3Icon = columns[2] === "1"
                         ? '<i class="fas fa-check" style="color:green"></i>'
                         : '<i class="fas fa-times" style="color:red"></i>';
@@ -115,43 +290,85 @@
                         : '<i class="fas fa-times" style="color:red"></i>';
                     const newRow = document.createElement('tr');
                     newRow.innerHTML = `
-                        <td>${columns[1]}</td>
-                        <td>${cctv3Icon}</td>
-                        <td>${cctv4Icon}</td>
-                        <td>${cctv6Icon}</td>
-                        <td>${cctv7Icon}</td>
-                        <td>${columns[6]}</td>
-                        <td>${columns[7]}</td>
-                        <td>${columns[8]}</td>                      
-                    `;
+                <td>${columns[1]}</td>
+                <td>${cctv3Icon}</td>
+                <td>${cctv4Icon}</td>
+                <td>${cctv6Icon}</td>
+                <td>${cctv7Icon}</td>
+                <td>${columns[6]}</td>
+                <td>${columns[7]}</td>
+                <td>${columns[8]}</td>                      
+            `;
                     tableBody.appendChild(newRow);
                 }
             });
-        })
-        .catch(error => console.error('Error loading CSV:', error));
+        }
 
-    // Example JavaScript to handle dynamic data loading or other functionalities
-    document.addEventListener('DOMContentLoaded', function () {
-        // This is where you can add functionality to fetch and display CCTV logs dynamically
-        console.log("CCTV Log page loaded.");
-    });
+        function filterRows() {
+            const month = document.getElementById('monthSelect').value;
+            const year = document.getElementById('yearSelect').value;
+            if (!month || !year) {
+                renderTable(allRows);
+                return;
+            }
+            const filtered = allRows.filter(columns => {
+                // columns[1] = date (YYYY-MM-DD)
+                const dateParts = columns[1].split('-');
+                return dateParts[0] === year && dateParts[1] === month;
+            });
+            renderTable(filtered);
+        }
 
-    function addLog(uniqueId, date, cctv3, cctv4, cctv6, cctv7, time, createdBy, remark, updateDate, updatedBy) {
-        const tableBody = document.querySelector('tbody');
-        const cctv3Icon = cctv3 === "1"
-            ? '<i class="fas fa-check" style="color:green"></i>'
-            : '<i class="fas fa-times" style="color:red"></i>';
-        const cctv4Icon = cctv4 === "1"
-            ? '<i class="fas fa-check" style="color:green"></i>'
-            : '<i class="fas fa-times" style="color:red"></i>';
-        const cctv6Icon = cctv6 === "1"
-            ? '<i class="fas fa-check" style="color:green"></i>'
-            : '<i class="fas fa-times" style="color:red"></i>';
-        const cctv7Icon = cctv7 === "1"
-            ? '<i class="fas fa-check" style="color:green"></i>'
-            : '<i class="fas fa-times" style="color:red"></i>';
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
+        fetch('cctvlog.csv')
+            .then(response => response.text())
+            .then(data => {
+                allRows = data
+                    .split('\n')
+                    .slice(1)
+                    .filter(row => row.trim() !== '')
+                    .map(row => row.split(','));
+                // แสดงข้อมูลตามเดือนปีปัจจุบันทันทีหลังโหลด
+                filterRows();
+            })
+            .catch(error => console.error('Error loading CSV:', error));
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('monthSelect').addEventListener('change', filterRows);
+            document.getElementById('yearSelect').addEventListener('change', filterRows);
+
+            // Set current month and populate year dropdown
+            const now = new Date();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('monthSelect').value = month;
+
+            const yearSelect = document.getElementById('yearSelect');
+            yearSelect.innerHTML = '';
+            for (let y = 2000; y <= 2100; y++) {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = y;
+                if (y === year) opt.selected = true;
+                yearSelect.appendChild(opt);
+            }
+        });
+
+        function addLog(uniqueId, date, cctv3, cctv4, cctv6, cctv7, time, createdBy, remark, updateDate, updatedBy) {
+            const tableBody = document.querySelector('tbody');
+            const cctv3Icon = cctv3 === "1"
+                ? '<i class="fas fa-check" style="color:green"></i>'
+                : '<i class="fas fa-times" style="color:red"></i>';
+            const cctv4Icon = cctv4 === "1"
+                ? '<i class="fas fa-check" style="color:green"></i>'
+                : '<i class="fas fa-times" style="color:red"></i>';
+            const cctv6Icon = cctv6 === "1"
+                ? '<i class="fas fa-check" style="color:green"></i>'
+                : '<i class="fas fa-times" style="color:red"></i>';
+            const cctv7Icon = cctv7 === "1"
+                ? '<i class="fas fa-check" style="color:green"></i>'
+                : '<i class="fas fa-times" style="color:red"></i>';
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
             <td>${date}</td>
             <td>${cctv3Icon}</td>
             <td>${cctv4Icon}</td>
@@ -161,10 +378,10 @@
             <td>${createdBy}</td>
             <td>${remark}</td>
         `;
-        tableBody.appendChild(newRow);
-    }
-
-</script>
+            tableBody.appendChild(newRow);
+        }
+    </script>
 
 </body>
+
 </html>
